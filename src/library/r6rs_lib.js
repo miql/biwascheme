@@ -2964,9 +2964,20 @@ if( typeof(BiwaScheme)!='object' ) BiwaScheme={}; with(BiwaScheme) {
   //     - (color-set red black) ;=> #<enum-set (red black)>
   define_syntax("define-enumeration", function(x){
     // Extract parameters 
-    var type_name = TODO;
-    var members = TODO;
-    var constructor_name = TODO;
+    var type_name = x.cdr.car;
+    assert(BiwaScheme.isSymbol(type_name),
+           "expected symbol for type_name", "define-enumeration");
+    type_name = type_name.name;
+
+    var members = x.cdr.cdr.car;
+    assert(BiwaScheme.isList(members),
+           "expected list of symbol for members", "define-enumeration");
+    members = members.to_array();
+
+    var constructor_name = x.cdr.cdr.cdr.car;
+    assert(BiwaScheme.isSymbol(constructor_name),
+           "expected symbol for constructor_name", "define-enumeration");
+    constructor_name = constructor_name.name;
 
     // Define EnumType
     var enum_type = new BiwaScheme.Enumeration.EnumType(members);
@@ -2974,32 +2985,34 @@ if( typeof(BiwaScheme)!='object' ) BiwaScheme={}; with(BiwaScheme) {
     // Define (color red)
     define_syntax(type_name, function(x){
       // (color)
-      assert(type_name, !BiwaScheme.isNil(x.cdr),
-        "an argument is needed");
+      assert(!BiwaScheme.isNil(x.cdr),
+             "an argument is needed", type_name);
 
       var arg = x.cdr.car;
       assert_symbol(arg, type_name);
       
       // Check arg is included in the universe
-      assert(type_name, _.include(enum_type.members, arg),
+      assert(_.include(enum_type.members, arg),
         arg.name+" is not included in the universe: "+
-          BiwaScheme.to_write(enum_type.members));
+          BiwaScheme.to_write(enum_type.members),
+        type_name);
 
-      return arg;
+      return BiwaScheme.List(Sym("quote"), arg);
     });
 
     // Define (color-set red black)
     define_syntax(constructor_name, function(x){
-      assert_list(BiwaScheme.isList(x.cdr), constructor_name);
+      assert_list(x.cdr, constructor_name);
 
       var symbols = x.cdr.to_array();
 
       // Check each argument is included in the universe
       _.each(symbols, function(arg){
         assert_symbol(arg, constructor_name);
-        assert(constructor_name, _.include(enum_type.members, arg),
+        assert(_.include(enum_type.members, arg),
           arg.name+" is not included in the universe: "+
-            BiwaScheme.to_write(enum_type.members));
+            BiwaScheme.to_write(enum_type.members),
+          constructor_name);
       });
 
       // Create an EnumSet

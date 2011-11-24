@@ -1585,7 +1585,14 @@ describe('14 Enumerators', {
 //  'enum-set-complement': function(){},
 //  'enum-set-projection': function(){},
 //
-//  'define-enumeration': function(){},
+  'define-enumeration (color)': function(){
+    ew("(define-enumeration color (red green black white) color-set) \
+        (color red)").should_be("red");
+  },
+  'define-enumeration (color-set)': function(){
+    ew("(define-enumeration color (red green black white) color-set) \
+        (enum-set->list (color-set white red))").should_be("(red white)");
+  },
 })
 
 describe('15 Composite library', {
