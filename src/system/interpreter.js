@@ -348,10 +348,7 @@ BiwaScheme.Interpreter = BiwaScheme.Class.create({
   expand: function(x, flag){
     flag || (flag = {})
     var ret = null;
-    if(x instanceof BiwaScheme.Symbol){
-      ret = x;
-    }
-    else if(x instanceof BiwaScheme.Pair){
+    if(x instanceof BiwaScheme.Pair){
       switch(x.car){
       case BiwaScheme.Sym("define"):
         var left = x.cdr.car, exp = x.cdr.cdr;
@@ -409,8 +406,6 @@ BiwaScheme.Interpreter = BiwaScheme.Class.create({
               break;
           }
         }
-        else if(x == BiwaScheme.nil)
-          ret = BiwaScheme.nil;
         else{
           ret = new BiwaScheme.Pair(this.expand(x.car, flag), BiwaScheme.shallow_array_to_list(_.map(x.cdr.to_array(), _.bind(function(item){ return this.expand(item, flag); }, this))));
         }
