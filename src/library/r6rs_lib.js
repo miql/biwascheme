@@ -2868,22 +2868,144 @@ if( typeof(BiwaScheme)!='object' ) BiwaScheme={}; with(BiwaScheme) {
   //
   // Chapter 14 Enumerators
   //
-//(make-enumeration symbol-list)    procedure 
-//(enum-set-universe enum-set)    procedure 
-//(enum-set-indexer enum-set)    procedure
-//(enum-set-constructor enum-set)    procedure 
-//(enum-set->list enum-set)    procedure
-//(enum-set-member? symbol enum-set)    procedure 
-//(enum-set-subset? enum-set1 enum-set2)    procedure 
-//(enum-set=? enum-set1 enum-set2)    procedure 
-//(enum-set-union enum-set1 enum-set2)    procedure 
-//(enum-set-intersection enum-set1 enum-set2)    procedure 
-//(enum-set-difference enum-set1 enum-set2)    procedure 
-//(enum-set-complement enum-set)    procedure 
-//(enum-set-projection enum-set1 enum-set2)    procedure 
-//(define-enumeration <type-name>    syntax 
-//(<symbol> ...)
-//<constructor-syntax>)
+  //(make-enumeration symbol-list) -> enum-set(new type)
+  define_libfunc("make-enumeration", 1, 1, function(ar){
+    assert_list(ar[0]);
+    var members = BiwaScheme.to_array(ar[0]);
+    var enum_type = new BiwaScheme.Enumeration.EnumType(members);
+    return enum_type.universe();
+  });
+
+  //(enum-set-universe enum-set) -> enum-set(same type as the argument)
+  define_libfunc("enum-set-universe", 1, 1, function(ar){
+    assert_enum_set(ar[0]);
+    return ar[0].enum_type.universe();
+  });
+
+  //(enum-set-indexer enum-set) -> (lambda (sym)) -> integer or #f
+  define_libfunc("enum-set-indexer", 1, 1, function(ar){
+    assert_enum_set(ar[0]);
+    return ar[0].enum_type.indexer();
+  });
+
+  //(enum-set-constructor enum-set) -> (lambda (syms)) -> enum-set(same type as the argument)
+  define_libfunc("enum-set-constructor", 1, 1, function(ar){
+    assert_enum_set(ar[0]);
+    return ar[0].enum_type.constructor();
+  });
+
+  //(enum-set->list enum-set) -> symbol-list
+  define_libfunc("enum-set->list", 1, 1, function(ar){
+    assert_enum_set(ar[0]);
+    return ar[0].symbol_list();
+  });
+
+  //(enum-set-member? symbol enum-set) -> bool
+  define_libfunc("enum-set-member?", 2, 2, function(ar){
+    assert_symbol(ar[0]);
+    assert_enum_set(ar[1]);
+    return ar[1].is_member(ar[0]);
+  });
+
+  //(enum-set-subset? esa esb) -> bool
+  define_libfunc("enum-set-subset?", 2, 2, function(ar){
+    assert_enum_set(ar[0]);
+    assert_enum_set(ar[1]);
+    return ar[0].is_subset(ar[1]);
+  });
+
+  //(enum-set=? esa esb) -> bool
+  define_libfunc("enum-set=?", 2, 2, function(ar){
+    assert_enum_set(ar[0]);
+    assert_enum_set(ar[1]);
+    return ar[0].equal_to(ar[1]);
+  });
+
+  //(enum-set-union es1 es2) -> enum-set
+  define_libfunc("enum-set-union", 2, 2, function(ar){
+    assert_enum_set(ar[0]);
+    assert_enum_set(ar[1]);
+    return ar[0].union(ar[1]);
+  });
+
+  //(enum-set-intersection es1 es2) -> enum-set
+  define_libfunc("enum-set-intersection", 2, 2, function(ar){
+    assert_enum_set(ar[0]);
+    assert_enum_set(ar[1]);
+    return ar[0].intersection(ar[1]);
+  });
+
+  //(enum-set-difference es1 es2) -> enum-set
+  define_libfunc("enum-set-difference", 2, 2, function(ar){
+    assert_enum_set(ar[0]);
+    assert_enum_set(ar[1]);
+    return ar[0].difference(ar[1]);
+  });
+
+  //(enum-set-complement enum-set) -> enum-set
+  define_libfunc("enum-set-complement", 1, 1, function(ar){
+    assert_enum_set(ar[0]);
+    return ar[0].complement();
+  });
+
+  //(enum-set-projection esa esb) -> enum-set
+  define_libfunc("enum-set-projection", 2, 2, function(ar){
+    assert_enum_set(ar[0]);
+    assert_enum_set(ar[1]);
+    return ar[0].projection(ar[1]);
+  });
+
+  //(define-enumeration <type-name> (<symbol> ...) <constructor-syntax>)
+  // Example: 
+  //   (define-enumeration color (red green black white) color-set)
+  //   this defines:
+  //     - an EnumType
+  //     - (color red) ;=> 'red
+  //     - (color-set red black) ;=> #<enum-set (red black)>
+  define_syntax("define-enumeration", function(x){
+    // Extract parameters 
+    var type_name = TODO;
+    var members = TODO;
+    var constructor_name = TODO;
+
+    // Define EnumType
+    var enum_type = new BiwaScheme.Enumeration.EnumType(members);
+    
+    // Define (color red)
+    define_syntax(type_name, function(x){
+      // (color)
+      assert(type_name, !BiwaScheme.isNil(x.cdr),
+        "an argument is needed");
+
+      var arg = x.cdr.car;
+      assert_symbol(arg, type_name);
+      
+      // Check arg is included in the universe
+      assert(type_name, _.indexOf(enum_type.members, arg) >= 0,
+        arg.name+" is not included in the universe: "+
+          BiwaScheme.to_write(enum_type.members));
+
+      return arg;
+    });
+
+    // Define (color-set red black)
+    define_syntax(constructor_name, function(x){
+      assert_list(BiwaScheme.isList(x.cdr), constructor_name);
+
+      var symbols = x.cdr.to_array();
+
+      // Check each argument is included in the universe
+      _.each(symbols, function(arg){
+        assert_symbol(arg, constructor_name);
+        assert(constructor_name, _.indexOf(enum_type.members, arg) >= 0,
+          arg.name+" is not included in the universe: "+
+            BiwaScheme.to_write(enum_type.members));
+      });
+
+      // Create an EnumSet
+      return new BiwaScheme.Enumeration.EnumSet(enum_type, symbols);
+    });
+  });
 
   //
   // Chapter 15 Composite library
