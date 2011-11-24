@@ -1589,7 +1589,17 @@ describe('14 Enumerators', {
               (enum-set-subset? (es1 a b) (es3 a b)) \
               (enum-set-subset? (es1 a b) (es3 a x)))").should_be("(#t #f #f #f)");
   },
-//  'enum-set=?': function(){},
+  'enum-set=?': function(){
+    ew("(define-enumeration e1 (a b c) es1) \
+        (define-enumeration e2 (a b c) es2) \
+        (define-enumeration e3 (a b x y) es3) \
+        (list (enum-set=? (es1 a b) (es1 a b)) \
+              (enum-set=? (es1 a b) (es1 c)) \
+              (enum-set=? (es1 a b) (es2 a b)) \
+              (enum-set=? (es1 a b) (es2 c)) \
+              (enum-set=? (es1 a b) (es3 a b)) \
+              (enum-set=? (es1 a b) (es3 a x)))").should_be("(#t #f #t #f #f #f)");
+  },
 //
 //  'enum-set-union': function(){},
 //  'enum-set-intersection': function(){},

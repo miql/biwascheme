@@ -125,19 +125,20 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
       return true;
     }
     else{
-      if(_.all(this.enum_type.members, function(sym){
-           return _.include(other.enum_type.members, sym);
-         })){
-        return true;
-      }
-      else
-        return false;
+      return _.all(this.enum_type.members, function(sym){
+               return _.include(other.enum_type.members, sym);
+             });
     }
   },
 
-  // Returns true if the enum_set contains the same set of symbols as 'other'.
+  // Returns true if:
+  //   - the enum_set contains the same set of symbols as 'other', and
+  //   - universe of the enum_set contains the same set of symbols
+  //     as the universe of 'other'.
+  //
   // The enum_set and 'other' may belong to different enum_type.
   equal_to: function(other){
+    return this.is_subset(other) && other.is_subset(this);
   },
 
   // Returns a enum_set which has:
