@@ -1548,7 +1548,10 @@ describe('13 Hashtables', {
 })
 
 describe('14 Enumerators', {
-  //'make-enumeration': covered by other tests
+  'make-enumeration': function(){
+    ew("(enum-set->list \
+          (make-enumeration '(a b c b)))").should_be("(a b c)");
+  },
   'enum-set-universe': function(){
     ew("(enum-set->list \
           (enum-set-universe \
