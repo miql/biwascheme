@@ -1550,27 +1550,32 @@ describe('13 Hashtables', {
 describe('14 Enumerators', {
   //'make-enumeration': covered by other tests
   'enum-set-universe': function(){
-    ew("(enum-set->list (enum-set-universe (make-enumeration '(a b c b))))").should_be("(a b c)");
+    ew("(enum-set->list \
+          (enum-set-universe \
+            (make-enumeration '(a b c b))))").should_be("(a b c)");
   },
-  'enum-set-indexer': function(){},
-  'enum-set-constructor': function(){},
-
-  'enum-set->list': function(){
-    ew("(define-enumeration color (red green black white) color-set) \
-        (enum-set->list (color-set white red))").should_be("(red white)");
+  'enum-set-indexer': function(){
+    ev("((enum-set-indexer (make-enumeration '(a b c b))) \
+         'b)").should_be(1);
   },
-  'enum-set-member?': function(){},
-  'enum-set-subset?': function(){},
-  'enum-set=?': function(){},
+//  'enum-set-constructor': function(){},
 
-  'enum-set-union': function(){},
-  'enum-set-intersection': function(){},
-  'enum-set-difference': function(){},
-
-  'enum-set-complement': function(){},
-  'enum-set-projection': function(){},
-
-  'define-enumeration': function(){},
+//  'enum-set->list': function(){
+//    ew("(define-enumeration color (red green black white) color-set) \
+//        (enum-set->list (color-set white red))").should_be("(red white)");
+//  },
+//  'enum-set-member?': function(){},
+//  'enum-set-subset?': function(){},
+//  'enum-set=?': function(){},
+//
+//  'enum-set-union': function(){},
+//  'enum-set-intersection': function(){},
+//  'enum-set-difference': function(){},
+//
+//  'enum-set-complement': function(){},
+//  'enum-set-projection': function(){},
+//
+//  'define-enumeration': function(){},
 })
 
 describe('15 Composite library', {

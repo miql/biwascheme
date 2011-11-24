@@ -45,7 +45,13 @@ BiwaScheme.Enumeration.EnumType = BiwaScheme.Class.create({
   // Implementation note: don't forget this.members may have duplicates.
   // TODO: memoize
   indexer: function(){
-    return function(ar){};
+    // ar[0] - a symbol
+    // Returns an integer or #f.
+    return _.bind(function(ar){
+      assert_symbol(ar[0], "(enum-set indexer)");
+      var idx = _.indexOf(this.members, ar[0]);
+      return (idx === -1) ? false : idx;
+    }, this);
   },
 
   // Retuns a function which creates an enum_set from a list of
