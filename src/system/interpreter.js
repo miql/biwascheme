@@ -398,11 +398,13 @@ BiwaScheme.Interpreter = BiwaScheme.Class.create({
           flag["modified"] = true;
           ret = transformer.transform(x);
 
-          if(BiwaScheme.Debug){
-            var before = BiwaScheme.to_write(x);
-            var after = BiwaScheme.to_write(ret);
-            if(before != after) puts("expand: " + before + " => " + after)
-          }
+//            // Debug
+//            var before = BiwaScheme.to_write(x);
+//            var after = BiwaScheme.to_write(ret);
+//            if(before != after){
+//              console.log("before: " + before)
+//              console.log("expand: " + after)
+//            }
 
           var fl;
           for(;;){
