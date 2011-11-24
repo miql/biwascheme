@@ -1558,7 +1558,11 @@ describe('14 Enumerators', {
     ev("((enum-set-indexer (make-enumeration '(a b c b))) \
          'b)").should_be(1);
   },
-//  'enum-set-constructor': function(){},
+  'enum-set-constructor': function(){
+    ew("(enum-set->list \
+          ((enum-set-constructor (make-enumeration '(a b c b))) \
+           '(c b a c)))").should_be("(a b c)");
+  },
 
 //  'enum-set->list': function(){
 //    ew("(define-enumeration color (red green black white) color-set) \

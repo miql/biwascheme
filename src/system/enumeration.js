@@ -22,7 +22,7 @@ BiwaScheme.Enumeration = {};
 //
 // Properties
 //
-// - members - Array of symbols
+// members - Array of symbols
 //
 BiwaScheme.Enumeration.EnumType = BiwaScheme.Class.create({
   // Creates a new enum_type.
@@ -58,18 +58,41 @@ BiwaScheme.Enumeration.EnumType = BiwaScheme.Class.create({
   // symbols (Symbols may be duplicate.)
   // TODO: memoize
   constructor: function(){
-    return function(ar){};
+    // ar[0] - a list of symbol
+    // Returns a enum_set.
+    return _.bind(function(ar){
+      assert_list(ar[0], "(enum-set constructor)");
+      var symbols = ar[0].to_array();
+      _.each(symbols, function(arg){
+        assert_symbol(arg, "(enum-set constructor)");
+      });
+
+      return new BiwaScheme.Enumeration.EnumSet(this, symbols);
+    }, this);
   }
 });
 
+// Represents an enum_set of an enum_type.
+//
+// Properties
+//
+// enum_type - The enum_type.
+// symbols   - Array of symbols (no duplicate, properly ordered)
+//
 BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   // Creates a new enum_set.
   //
   // enum_type - An EnumType
-  // symbols   - Array of symbols
+  // symbols   - Array of symbols.
+  //
+  // initialize normalizes symbols.
+  //   - remove duplicates
+  //   - order by universe
   initialize: function(enum_type, symbols){
     this.enum_type = enum_type;
-    this.symbols = symbols;
+    this.symbols = _.filter(enum_type.members, function(sym){
+      return (_.indexOf(symbols, sym) !== -1);
+    });
   },
 
   // Returns a list of symbols.
