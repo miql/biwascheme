@@ -30,37 +30,29 @@ BiwaScheme.Enumeration.EnumType = BiwaScheme.Class.create({
   // members - Array of symbols.
   //           Symbols may be duplicate (I think you shouldn't, though :-p).
   initialize: function(members){
-    this.members = members;
+    this.members = _.uniq(members);
   },
 
   // Returns an EnumSet.
+  // TODO: memoize
   universe: function(){
-    if(!this._universe){
-      this._universe = new BiwaScheme.Enumeration.EnumSet
-    }
-    return this._universe;
+    return new BiwaScheme.Enumeration.EnumSet(this, this.members);
   }, 
 
   // Returns a function which map a symbol to an integer (or #f, if 
   // the symbol is out of the universe).
   // 
   // Implementation note: don't forget this.members may have duplicates.
+  // TODO: memoize
   indexer: function(){
-    if(!this._indexer){
-      this._indexer = function(ar){
-      }
-    }
-    return this._indexer;
+    return function(ar){};
   },
 
   // Retuns a function which creates an enum_set from a list of
   // symbols (Symbols may be duplicate.)
+  // TODO: memoize
   constructor: function(){
-    if(!this._constructor){
-      this._constructor = function(ar){
-      }
-    }
-    return this._constructor;
+    return function(ar){};
   }
 });
 
@@ -75,7 +67,9 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   },
 
   // Returns a list of symbols.
+  // TODO: memoize
   symbol_list: function(){
+    return BiwaScheme.array_to_list(this.symbols); 
   },
   
   // Returns true if the enum_set includes the symbol.

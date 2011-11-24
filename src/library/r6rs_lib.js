@@ -2871,7 +2871,7 @@ if( typeof(BiwaScheme)!='object' ) BiwaScheme={}; with(BiwaScheme) {
   //(make-enumeration symbol-list) -> enum-set(new type)
   define_libfunc("make-enumeration", 1, 1, function(ar){
     assert_list(ar[0]);
-    var members = BiwaScheme.to_array(ar[0]);
+    var members = ar[0].to_array();
     var enum_type = new BiwaScheme.Enumeration.EnumType(members);
     return enum_type.universe();
   });
