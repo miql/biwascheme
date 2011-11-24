@@ -1566,16 +1566,29 @@ describe('14 Enumerators', {
           ((enum-set-constructor (make-enumeration '(a b c b))) \
            '(c b a c)))").should_be("(a b c)");
   },
-//  'enum-set->list': function(){
-//    ew("(define-enumeration color (red green black white) color-set) \
-//        (enum-set->list (color-set white red))").should_be("(red white)");
-//  },
+  'enum-set->list': function(){
+    ew("(define-enumeration color (red green black white) color-set) \
+        (enum-set->list (color-set white red))").should_be("(red white)");
+  },
   'enum-set-member?': function(){
     ew("(let1 es (make-enumeration '(a b c b)) \
           (list (enum-set-member? 'a es) \
                 (enum-set-member? 'x es)))").should_be("(#t #f)");
   },
-//  'enum-set-subset?': function(){},
+  'enum-set-subset?(same type)': function(){
+    ew("(define-enumeration e (a b c d) es) \
+        (list (enum-set-subset? (es b d) (es a b d)) \
+              (enum-set-subset? (es b d) (es a c d)))").should_be("(#t #f)");
+  },
+  'enum-set-subset?(different type)': function(){
+    ew("(define-enumeration e1 (a b c) es1) \
+        (define-enumeration e2 (a b c d) es2) \
+        (define-enumeration e3 (a b x y) es3) \
+        (list (enum-set-subset? (es1 a b) (es2 a b)) \
+              (enum-set-subset? (es1 a b) (es2 c d)) \
+              (enum-set-subset? (es1 a b) (es3 a b)) \
+              (enum-set-subset? (es1 a b) (es3 a x)))").should_be("(#t #f #f #f)");
+  },
 //  'enum-set=?': function(){},
 //
 //  'enum-set-union': function(){},

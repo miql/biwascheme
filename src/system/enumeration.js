@@ -22,7 +22,7 @@ BiwaScheme.Enumeration = {};
 //
 // Properties
 //
-// members - Array of symbols
+// members - Array of symbols (no duplicate)
 //
 BiwaScheme.Enumeration.EnumType = BiwaScheme.Class.create({
   // Creates a new enum_type.
@@ -113,6 +113,26 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   //   the universe of 'other'.
   // The enum_set and 'other' may belong to different enum_type.
   is_subset: function(other){
+    // Check elements
+    if(_.any(this.symbols, function(sym){
+         return !_.include(other.symbols, sym);
+       })){
+      return false;
+    }
+
+    // Check universe
+    if(this.enum_type === other.enum_type){
+      return true;
+    }
+    else{
+      if(_.all(this.enum_type.members, function(sym){
+           return _.include(other.enum_type.members, sym);
+         })){
+        return true;
+      }
+      else
+        return false;
+    }
   },
 
   // Returns true if the enum_set contains the same set of symbols as 'other'.
