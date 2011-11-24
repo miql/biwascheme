@@ -68,7 +68,7 @@ BiwaScheme.define_libfunc_raw = function(fname, min, max, func){
 }
 BiwaScheme.define_syntax = function(sname, func) {
   var s = new BiwaScheme.Syntax(sname, func);
-  BiwaScheme.TopEnv[sname] = s;
+  BiwaScheme.CoreEnv[sname] = s;
 }
 BiwaScheme.define_scmfunc = function(fname, min, max, str){
   (new Interpreter).evaluate("(define "+fname+" "+str+"\n)");

@@ -386,10 +386,15 @@ BiwaScheme.Interpreter = BiwaScheme.Class.create({
         ret = BiwaScheme.List(BiwaScheme.Sym("call/cc"), this.expand(x, flag));
         break;
       default: //apply
-        // if x is a macro call ...
-        if(x.car instanceof BiwaScheme.Symbol &&
-            BiwaScheme.TopEnv[x.car.name] instanceof BiwaScheme.Syntax){
-          var transformer = BiwaScheme.TopEnv[x.car.name];
+        var transformer = null;
+        if(BiwaScheme.isSymbol(x.car)){
+          if(BiwaScheme.TopEnv[x.car.name] instanceof BiwaScheme.Syntax)
+            transformer = BiwaScheme.TopEnv[x.car.name];
+          else if(BiwaScheme.CoreEnv[x.car.name] instanceof BiwaScheme.Syntax)
+            transformer = BiwaScheme.CoreEnv[x.car.name];
+        }
+
+        if(transformer){
           flag["modified"] = true;
           ret = transformer.transform(x);
 
