@@ -91,7 +91,7 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   initialize: function(enum_type, symbols){
     this.enum_type = enum_type;
     this.symbols = _.filter(enum_type.members, function(sym){
-      return (_.indexOf(symbols, sym) !== -1);
+      return _.include(symbols, sym);
     });
   },
 
@@ -104,6 +104,7 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   // Returns true if the enum_set includes the symbol.
   // 'symbol' is allowed to be a symbol which is not included in the universe.
   is_member: function(symbol){
+    return _.include(this.symbols, symbol);
   },
   
   // Returns true if:
@@ -149,7 +150,8 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   },
 
   // Returns a string which represents the enum_set.
-  to_write: function(){
+  toString: function(){
+    return "#<EnumSet "+BiwaScheme.inspect(this.symbols)+">";
   }
 });
 

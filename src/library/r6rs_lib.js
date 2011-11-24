@@ -2981,7 +2981,7 @@ if( typeof(BiwaScheme)!='object' ) BiwaScheme={}; with(BiwaScheme) {
       assert_symbol(arg, type_name);
       
       // Check arg is included in the universe
-      assert(type_name, _.indexOf(enum_type.members, arg) >= 0,
+      assert(type_name, _.include(enum_type.members, arg),
         arg.name+" is not included in the universe: "+
           BiwaScheme.to_write(enum_type.members));
 
@@ -2997,7 +2997,7 @@ if( typeof(BiwaScheme)!='object' ) BiwaScheme={}; with(BiwaScheme) {
       // Check each argument is included in the universe
       _.each(symbols, function(arg){
         assert_symbol(arg, constructor_name);
-        assert(constructor_name, _.indexOf(enum_type.members, arg) >= 0,
+        assert(constructor_name, _.include(enum_type.members, arg),
           arg.name+" is not included in the universe: "+
             BiwaScheme.to_write(enum_type.members));
       });
