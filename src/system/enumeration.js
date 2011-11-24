@@ -129,3 +129,7 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   to_write: function(){
   }
 });
+
+BiwaScheme.isEnumSet = function(obj){
+  return (obj instanceof BiwaScheme.Enumeration.EnumSet);
+};

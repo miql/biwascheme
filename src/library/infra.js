@@ -147,6 +147,8 @@ var assert_record_td = make_simple_assert("record type descriptor",
                                           BiwaScheme.isRecordTD);
 var assert_record_cd = make_simple_assert("record constructor descriptor",
                                           BiwaScheme.isRecordCD);
+var assert_enum_set = make_simple_assert("enum_set",
+                                          BiwaScheme.isEnumSet);
 
 var assert_function = make_simple_assert("JavaScript function", 
                                          _.isFunction);
