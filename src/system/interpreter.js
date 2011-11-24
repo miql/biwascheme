@@ -412,7 +412,11 @@ BiwaScheme.Interpreter = BiwaScheme.Class.create({
           }
         }
         else{
-          ret = new BiwaScheme.Pair(this.expand(x.car, flag), BiwaScheme.shallow_array_to_list(_.map(x.cdr.to_array(), _.bind(function(item){ return this.expand(item, flag); }, this))));
+          var expanded_car = this.expand(x.car, flag);
+          var expanded_cdr = BiwaScheme.shallow_array_to_list(
+                               _.map(x.cdr.to_array(),
+                                     _.bind(function(item){ return this.expand(item, flag); }, this)));
+          ret = new BiwaScheme.Pair(expanded_car, expanded_cdr);
         }
       }
     }
