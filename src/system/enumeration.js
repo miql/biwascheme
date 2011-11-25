@@ -162,6 +162,10 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   // Returns a enum_set which has:
   // - the symbols included in the universe but not in the enum_set.
   complement: function(){
+    var syms = _.filter(this.enum_type.members, _.bind(function(sym){
+                 return !_.include(this.symbols, sym);
+               }, this));
+    return new BiwaScheme.Enumeration.EnumSet(this.enum_type, syms);
   },
 
   // Returns a enum_set which has:

@@ -1605,7 +1605,14 @@ describe('14 Enumerators', {
 //  'enum-set-intersection': function(){},
 //  'enum-set-difference': function(){},
 //
-//  'enum-set-complement': function(){},
+  'enum-set-complement': function(){
+    ew("(define-enumeration e (a b c) es) \
+        (map enum-set->list \
+          (list (enum-set-complement (es)) \
+                (enum-set-complement (es a b)) \
+                (enum-set-complement (es a b c))"
+      ).should_be("((a b c) (c) ())");
+  },
 //  'enum-set-projection': function(){},
 //
   'define-enumeration (color)': function(){
