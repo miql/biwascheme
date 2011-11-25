@@ -166,6 +166,10 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   // - the symbols included in the enum_set and not in the enum_set 'other'.
   // The enum_set and 'other' *must* belong to the same enum_type.
   difference: function(other){
+    var syms = _.filter(this.symbols, function(sym){
+                 return !_.include(other.symbols, sym);
+               });
+    return new BiwaScheme.Enumeration.EnumSet(this.enum_type, syms);
   },
 
   // Returns a enum_set which has:

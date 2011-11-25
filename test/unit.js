@@ -1620,8 +1620,15 @@ describe('14 Enumerators', {
                 (enum-set-intersection (es a c d b) (es d b c a))))"
       ).should_be("(() (b c) (a b c d))");
   },
-//  'enum-set-difference': function(){},
-//
+  'enum-set-difference': function(){
+    ew("(define-enumeration e (a b c d) es) \
+        (map enum-set->list \
+          (list (enum-set-difference (es a b) (es c d)) \
+                (enum-set-difference (es a b c) (es b c d)) \
+                (enum-set-difference (es a c d b) (es d b c a))))"
+      ).should_be("((a b) (a) ())");
+  },
+
   'enum-set-complement': function(){
     ew("(define-enumeration e (a b c) es) \
         (map enum-set->list \
