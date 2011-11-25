@@ -1613,8 +1613,16 @@ describe('14 Enumerators', {
                 (enum-set-complement (es a b c))"
       ).should_be("((a b c) (c) ())");
   },
-//  'enum-set-projection': function(){},
-//
+  'enum-set-projection': function(){
+    ew("(define-enumeration e1 (a b c) es1) \
+        (define-enumeration e2 (b c d) es2) \
+        (map enum-set->list \
+          (list (enum-set-projection (es1 a b) (es2)) \
+                (enum-set-projection (es1 a) (es2 b c)) \
+                (enum-set-projection (es1 a b c) (es2 b c d))))"
+      ).should_be("((b) () (b c))");
+  },
+
   'define-enumeration (color)': function(){
     ew("(define-enumeration color (red green black white) color-set) \
         (color red)").should_be("red");

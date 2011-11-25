@@ -172,6 +172,10 @@ BiwaScheme.Enumeration.EnumSet = BiwaScheme.Class.create({
   // - the symbols included in the enum_set and the universe of the enum_set 'other'.
   // The enum_set and 'other' may belong to different enum_type.
   projection: function(other){
+    var syms = _.filter(this.symbols, function(sym){
+                 return _.include(other.enum_type.members, sym);
+               });
+    return new BiwaScheme.Enumeration.EnumSet(other.enum_type, syms);
   },
 
   // Returns a string which represents the enum_set.

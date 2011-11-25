@@ -24,6 +24,8 @@ Middle priority
 
 -- reference
 
+-- better parser (for missing syntaxes)
+
 -- [r6rs-lib] immutable hashtable
  --- should try http://www.timdown.co.uk/jshashtable/ ?
 -- [r6rs-lib] enumeration
