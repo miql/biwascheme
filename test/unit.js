@@ -1607,12 +1607,19 @@ describe('14 Enumerators', {
   'enum-set-union': function(){
     ew("(define-enumeration e (a b c d) es) \
         (map enum-set->list \
-          (list (enum-set-union (es a b) (es c d)) \
+          (list (enum-set-union (es a) (es c)) \
                 (enum-set-union (es a b c) (es b c d)) \
-                (enum-set-union (es a c d b) (es d b c a))))"
+                (enum-set-union (es c d) (es c d))))"
+      ).should_be("((a c) (a b c d) (c d))");
+  },
+  'enum-set-intersection': function(){
+    ew("(define-enumeration e (a b c d) es) \
+        (map enum-set->list \
+          (list (enum-set-intersection (es a b) (es c d)) \
+                (enum-set-intersection (es a b c) (es b c d)) \
+                (enum-set-intersection (es a c d b) (es d b c a))))"
       ).should_be("(() (b c) (a b c d))");
   },
-//  'enum-set-intersection': function(){},
 //  'enum-set-difference': function(){},
 //
   'enum-set-complement': function(){
