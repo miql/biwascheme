@@ -2925,6 +2925,8 @@ if( typeof(BiwaScheme)!='object' ) BiwaScheme={}; with(BiwaScheme) {
   define_libfunc("enum-set-union", 2, 2, function(ar){
     assert_enum_set(ar[0]);
     assert_enum_set(ar[1]);
+    assert(ar[0].enum_type === ar[1].enum_type,
+           "two enum-sets must be the same enum-type", "enum-set-union");
     return ar[0].union(ar[1]);
   });
 

@@ -1578,7 +1578,8 @@ describe('14 Enumerators', {
   'enum-set-subset?(same type)': function(){
     ew("(define-enumeration e (a b c d) es) \
         (list (enum-set-subset? (es b d) (es a b d)) \
-              (enum-set-subset? (es b d) (es a c d)))").should_be("(#t #f)");
+              (enum-set-subset? (es b d) (es a c d)))"
+      ).should_be("(#t #f)");
   },
   'enum-set-subset?(different type)': function(){
     ew("(define-enumeration e1 (a b c) es1) \
@@ -1587,7 +1588,8 @@ describe('14 Enumerators', {
         (list (enum-set-subset? (es1 a b) (es2 a b)) \
               (enum-set-subset? (es1 a b) (es2 c d)) \
               (enum-set-subset? (es1 a b) (es3 a b)) \
-              (enum-set-subset? (es1 a b) (es3 a x)))").should_be("(#t #f #f #f)");
+              (enum-set-subset? (es1 a b) (es3 a x)))"
+      ).should_be("(#t #f #f #f)");
   },
   'enum-set=?': function(){
     ew("(define-enumeration e1 (a b c) es1) \
@@ -1598,10 +1600,18 @@ describe('14 Enumerators', {
               (enum-set=? (es1 a b) (es2 a b)) \
               (enum-set=? (es1 a b) (es2 c)) \
               (enum-set=? (es1 a b) (es3 a b)) \
-              (enum-set=? (es1 a b) (es3 a x)))").should_be("(#t #f #t #f #f #f)");
+              (enum-set=? (es1 a b) (es3 a x)))"
+      ).should_be("(#t #f #t #f #f #f)");
   },
-//
-//  'enum-set-union': function(){},
+
+  'enum-set-union': function(){
+    ew("(define-enumeration e (a b c d) es) \
+        (map enum-set->list \
+          (list (enum-set-union (es a b) (es c d)) \
+                (enum-set-union (es a b c) (es b c d)) \
+                (enum-set-union (es a c d b) (es d b c a))))"
+      ).should_be("(() (b c) (a b c d))");
+  },
 //  'enum-set-intersection': function(){},
 //  'enum-set-difference': function(){},
 //
