@@ -18,8 +18,7 @@ Inbox
 High priority
 -------------
 
-- release 0.6.1
-  - biwas (precisely, old optparse it uses) does not work on node 0.6.2
+- release 0.6.2
 
 - LICENCE to biwascheme(-min).js
 
@@ -35,6 +34,34 @@ High priority
      BiwaScheme.inspect : used by BiwaScheme.inspect
      .toString : used by Firebug?
 
+     display -> write <- inspect
+                 |
+                 v
+                 toString
+
+||Type   ||Source||write  ||display||inspect||toString
+||boolean||#t    ||'#t'   ||       ||       ||'true' (js)
+||nil    ||()    ||'()'   ||       ||       ||'nil'
+||number ||1     ||'1'    ||       ||       ||'1' (js)
+||symbol ||'a    ||'a'    ||       ||       ||'\'a'
+||string ||"a"   ||'"a"'  ||'a'    ||       ||'"a"' or "'a'" (js)
+||char   ||#\a   ||'#\a'  ||'a'    ||[write]||
+
+||vector ||#(1 2)||"#(1 2)"||      ||       ||"1,2" (js)
+||pair   ||'("a")||'("a"')"||      ||inspect||[inspect]
+
+||function||(js-clojure f)||"#<...>"||
+
+||enum-set ||e||          ||       ||       ||"#<...>"
+||hashtable||h||"#<...>"  ||       ||       ||
+||record   ||r||"#<...>"  ||       ||       ||
+||port     ||p||"#<...>"  ||       ||"#<...>"||
+
+||undef  ||     ||        ||       ||       ||"#<undef>"
+
+||null   ||(js-eval "null")||"#<null>" || || ||<js error>
+||undefined||(js-eval "undefined")||"#<undefined>" || || ||<js error>
+
 - unbound variable reference in define-macro returns undefined
   (yhara/#15)
 
@@ -49,16 +76,13 @@ Middle priority
 
 -- new syntax: ..
 
--- better parser (for missing syntaxes)
-   * #\vtab, etc.
-   * #b, #o
-   * a program "1;;" raises error: unbound symbol: '1;;'
-
 -- id="biwa-script"
 
 -- fix leaking variables
 
 -- dynamic-wind
+
+-- handle error on biwas(REPL)
 
 Low priority
 ------------
@@ -76,54 +100,70 @@ Low priority
 
 --- combination of with-output-to-port and values
 
-Things other than code
-----------------------
+--- better parser (for missing syntaxes)
+   * #\vtab, etc.
+   * #b, #o
+   * a program "1;;" raises error: unbound symbol: '1;;'
+
+--- list-sort with compare function 
+    implement quick sort in CPS
+
+Website 
+-------
 
 -- reference
 
---- move website to Heroku?
- --- because some tests needs server-side program
+--- make test/browser_functions/ online
+  --- merge server.js to web.js?
+
+-- better example for index.html
+  (display "hello") does not work without #bs-console
+
+-- provide compiled older versions of biwascheme.js
+
+--- better design
+  * css
+  * same header for demos, tracer, etc (frame?)
 
 Refactoring and maintenance
 ---------------------------
 
---- move package.json to root and remove node_modules/ ?
+--- add ./biwas
+
+--- remove _types.js
 
 --- try http://visionmedia.github.com/mocha/ ?
 
---- rename src/system/foo.js to _foo.js when class Foo is not defined
-    * types.js
-    * value.js
-    * write.js
-    * \_nodejs.js
-
-    * stackbase.js
-      * puts, p
-      * TopEnv, CoreEnv
-      * Error, Bug, UserError
-
---- BiwaScheme.memoize
-    eg.
-      BiwaScheme.memoize(BiwaScheme.Enumeration.EnumType.prototype, "_universe"); 
-
-      Original function:
-        constructor: function(){
-          return function(ar){
-          };
-        }
-
-      Memoizer:
-        memoize = function(obj, name){
-          obj["compute_"+name] = obj[name];
-          obj[name] = function(/*arguments*/){
-            if(!obj.hasOwnProperty("cached_"+name)){
-              obj["cached_"+name] = obj["compute_"+name].apply(TODO, arguments);
-            }
-            return obj["cached_"+name];
-          }
-        }
-
-     File:
-       src/system/class.js?
-
 --- remove test/console_test.js
+
+Interesting SRFI
+----------------
+
+http://srfi.schemers.org/final-srfis.html
+(ja: http://www.chino-js.com/ja/tech/srfi/final-srfis.html )
+
+Partially implemented:
+
+- 1 list libraries
+- 13 string libraries
+- 19 time 
+- 27 (random-integer) 
+- 38 (write-with-shared-structure) 
+- 43 vector libraries 
+
+Not yet:
+
+- 8 (receive)
+- 22 shebang [Node]
+- 26 (cut) 
+- 39 (parameterize) is it identical to the one in R7RS?
+
+Maybe:
+
+-- 17 generalized set! 
+-- 40 stream 
+-- 42 (list-ec) 
+-- 44 collection
+-- 48 (format) (intermediate, ~d, ~b, etc.)
+-- 78 (check) -> list-ec
+-- 88 keyword (like 'test:')

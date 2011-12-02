@@ -325,4 +325,9 @@ with(BiwaScheme) {
     assert_vector(ar[0]);
     return _.clone(ar[0]);
   });
+
+  //
+  // see src/library/node_functions.js for:
+  // - srfi-98 (get-environment-variable)
+  //
 }
